@@ -2,6 +2,8 @@ package com.careydevelopment.nativeadsurfer.exec;
 
 import java.util.List;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +24,11 @@ public class NativeAdSurfer {
 
 	private void go() {
 		try {
+			WebDriver driver = new FirefoxDriver();
 			List<String> domains = DomainsLoader.getDomains();
 			
 			for (String domain : domains) {
-				DomainProcessor processor = new DomainProcessor(domain);
+				DomainProcessor processor = new DomainProcessor(domain,driver);
 				processor.process();
 			}
 		} catch (NativeAdSurferException ne) {

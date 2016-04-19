@@ -71,7 +71,7 @@ public class HtmlUnitTest {
 	        
 	        //List<WebElement> els = driver.findElements(By.className("heading"));
 	        
-	        List<WebElement> els = driver.findElements(By.className("trc_rbox_outer"));
+	    	List<WebElement> els = driver.findElements(By.className("trc_rbox_outer"));
 	        //List<WebElement> els = driver.findElements(By.className("zerglayoutcl"));
 	        for (WebElement el : els) {
 	        	System.err.println(el.getText());

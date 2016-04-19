@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,16 +17,16 @@ public class DomainProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
-	private static final int MAX_LINKS = 5;
+	private static final int MAX_LINKS = 3;
 	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.ZERG};
 	
 	private String domain;
 	private WebDriver driver;
 	private String rootUrl;
 	
-	public DomainProcessor(String domain) {
+	public DomainProcessor(String domain, WebDriver driver) {
 		this.domain = domain;
-		driver = new ChromeDriver();
+		this.driver = driver;
 		buildRootUrl();
 	}
 
@@ -69,7 +70,7 @@ public class DomainProcessor {
 		List<String> validLinks = new ArrayList<String>();
 		for (WebElement link : links) {
 			String href = link.getAttribute("href");
-			if (href.indexOf(domain) > -1) {
+			if (href.indexOf(domain) > -1 && href.length() > domain.length() + 30) {
 				LOGGER.info("Adding link " + href);
 				validLinks.add(href);
 				if (validLinks.size() == MAX_LINKS) break;
