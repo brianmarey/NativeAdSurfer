@@ -1,11 +1,15 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import org.openqa.selenium.WebDriver;
+
 import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
 
 public class OutbrainProcessor implements NativeAdProcessor {
 
-	public OutbrainProcessor() {
-		// TODO Auto-generated constructor stub
+	private WebDriver driver;
+	
+	public OutbrainProcessor(WebDriver driver) {
+		this.driver = driver;
 	}
 
 	@Override

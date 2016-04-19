@@ -10,12 +10,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
+
 public class DomainProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
 	private static final int MAX_LINKS = 5;
-	private static final NativeAdCompany[] USED_BRANDS = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.ZERG};
+	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.ZERG};
 	
 	private String domain;
 	private WebDriver driver;
@@ -37,7 +39,7 @@ public class DomainProcessor {
 	}
 	
 	
-	public void process() {
+	public void process() throws NativeAdSurferException {
 		LOGGER.info("Loading root url " + rootUrl);
 		driver.get(rootUrl);
 		
@@ -51,8 +53,11 @@ public class DomainProcessor {
 	}
 	
 	
-	private void processAllNativeAds() {
-		
+	private void processAllNativeAds() throws NativeAdSurferException {
+		for (NativeAdCompany company : COMPANIES) {
+			NativeAdProcessor processor = NativeAdProcesscorFactory.getNativeAdProcessor(company,driver);
+			processor.process();
+		}
 	}
 	
 	

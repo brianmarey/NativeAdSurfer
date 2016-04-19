@@ -1,11 +1,15 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import org.openqa.selenium.WebDriver;
+
 import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
 
 public class TaboolaProcessor implements NativeAdProcessor {
+	
+	private WebDriver driver;
 
-	public TaboolaProcessor() {
-		// TODO Auto-generated constructor stub
+	public TaboolaProcessor(WebDriver driver) {
+		this.driver = driver;
 	}
 
 	@Override

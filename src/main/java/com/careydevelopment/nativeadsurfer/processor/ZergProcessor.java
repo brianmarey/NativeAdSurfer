@@ -1,11 +1,15 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import org.openqa.selenium.WebDriver;
+
 import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
 
 public class ZergProcessor implements NativeAdProcessor {
+	
+	private WebDriver driver;
 
-	public ZergProcessor() {
-		// TODO Auto-generated constructor stub
+	public ZergProcessor(WebDriver driver) {
+		this.driver = driver;
 	}
 
 	@Override
