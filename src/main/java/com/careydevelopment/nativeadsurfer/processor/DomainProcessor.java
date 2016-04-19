@@ -1,4 +1,4 @@
-package com.careydevelopment.nativeadsurfer.exec;
+package com.careydevelopment.nativeadsurfer.processor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ public class DomainProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
 	private static final int MAX_LINKS = 5;
+	private static final NativeAdCompany[] USED_BRANDS = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.ZERG};
 	
 	private String domain;
 	private WebDriver driver;
@@ -42,6 +43,15 @@ public class DomainProcessor {
 		
 		List<String> validLinks = getValidLinks();
 		
+		for (String link : validLinks) {
+			LOGGER.info("Getting URL " + link);
+			driver.get(link);
+			processAllNativeAds();
+		}
+	}
+	
+	
+	private void processAllNativeAds() {
 		
 	}
 	

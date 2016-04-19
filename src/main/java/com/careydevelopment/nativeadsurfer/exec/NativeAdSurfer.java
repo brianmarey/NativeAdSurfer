@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.careydevelopment.nativeadsurfer.processor.DomainProcessor;
 import com.careydevelopment.nativeadsurfer.util.DomainsLoader;
 
 public class NativeAdSurfer {
