@@ -15,9 +15,11 @@ public class ZergProcessor implements NativeAdProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZergProcessor.class);
 	
 	private WebDriver driver;
+	private String domain;
 
-	public ZergProcessor(WebDriver driver) {
+	public ZergProcessor(WebDriver driver,String domain) {
 		this.driver = driver;
+		this.domain = domain;
 	}
 
 	@Override

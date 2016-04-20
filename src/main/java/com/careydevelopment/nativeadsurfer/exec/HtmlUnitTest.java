@@ -34,8 +34,9 @@ public class HtmlUnitTest {
 	    	WebDriver driver = new FirefoxDriver();
 
 	        // And now use this to visit Google
-	    	driver.get("http://www.huffingtonpost.com/entry/trump-clinton-new-york-primary_us_57162031e4b0018f9cbb00a9");
-	        // Alternatively the same thing can be done like this
+	    	//driver.get("http://www.huffingtonpost.com/entry/trump-clinton-new-york-primary_us_57162031e4b0018f9cbb00a9");
+	        driver.get("http://www.mediaite.com/online/can-hillary-clinton-repeat-her-5-borough-sweep-here-in-new-york-city/");
+	    	// Alternatively the same thing can be done like this
 	        // driver.navigate().to("http://www.google.com");
 
 	        // Find the text input element by its name
@@ -63,18 +64,24 @@ public class HtmlUnitTest {
 	        // Should see: "cheese! - Google Search"
 	        //System.out.println("Page title is: " + driver.getTitle());
 	        
-	        /*List<WebElement> els = driver.findElements(By.className("ob-widget-section"));
-	       
-	        for (WebElement el : els) {
-	        	System.err.println(el.getText());
-	        }*/
+	        
+	        //List<WebElement> els = driver.findElements(By.className("ob-dynamic-rec-link"));
+	        //els = driver.findElements(By.className("ob-rec-image"));
 	        
 	        //List<WebElement> els = driver.findElements(By.className("heading"));
 	        
-	    	List<WebElement> els = driver.findElements(By.className("trc_rbox_outer"));
+	    	List<WebElement> els = driver.findElements(By.className("item-thumbnail-href"));
 	        //List<WebElement> els = driver.findElements(By.className("zerglayoutcl"));
 	        for (WebElement el : els) {
+	        	System.err.println(el.getAttribute("href"));
 	        	System.err.println(el.getText());
+	        }
+	        
+	        els = driver.findElements(By.className("thumbnail_top"));
+	        
+	        for (WebElement el : els) {
+	        	System.err.println(el.getAttribute("data-item-thumb"));
+	        	System.err.println(el.getAttribute("data-item-title"));
 	        }
 	        
 	        //driver.findElements(By.)

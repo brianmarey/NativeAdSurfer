@@ -56,7 +56,7 @@ public class DomainProcessor {
 	
 	private void processAllNativeAds() throws NativeAdSurferException {
 		for (NativeAdCompany company : COMPANIES) {
-			NativeAdProcessor processor = NativeAdProcesscorFactory.getNativeAdProcessor(company,driver);
+			NativeAdProcessor processor = NativeAdProcesscorFactory.getNativeAdProcessor(company,driver,domain);
 			processor.process();
 		}
 	}

@@ -15,9 +15,11 @@ public class OutbrainProcessor implements NativeAdProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutbrainProcessor.class);
 
 	private WebDriver driver;
+	private String domain;
 	
-	public OutbrainProcessor(WebDriver driver) {
+	public OutbrainProcessor(WebDriver driver,String domain) {
 		this.driver = driver;
+		this.domain = domain;
 	}
 
 	@Override
