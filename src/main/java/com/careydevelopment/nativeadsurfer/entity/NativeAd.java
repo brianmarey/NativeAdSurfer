@@ -33,10 +33,10 @@ public class NativeAd {
 	private String imageUrl;
 
 	@ManyToOne
+	@JoinColumn(name="company")
 	private AdCompany adCompany;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name="native_ad")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="nativeAd")
 	private List<DomainAd> domainAds;
 	
 

@@ -1,5 +1,7 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -9,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.careydevelopment.nativeadsurfer.entity.AdCompany;
 import com.careydevelopment.nativeadsurfer.entity.Domain;
+import com.careydevelopment.nativeadsurfer.entity.DomainAd;
+import com.careydevelopment.nativeadsurfer.entity.NativeAd;
 
 public abstract class PublisherProcessor {
 
@@ -64,6 +68,32 @@ public abstract class PublisherProcessor {
 			LOGGER.info("No domain name " + domainName + " adding new one");
 			domain = persistDomain(domainName);
 		}
+		
+		return domain;
+	}
+	
+	
+	protected void persistAd(NativeAd ad, Domain domain) {
+		Query query = em.createQuery("select da from DomainAd da where da.domain.name = :domainName and da.nativeAd.url = :url");
+		query.setParameter("domainName", domain.getName());
+		query.setParameter("url", ad.getUrl());
+		
+		try {
+			DomainAd domainAd = (DomainAd)query.getSingleResult();
+			LOGGER.info("\n\n\nI GOT IT!!");
+		} catch (NoResultException nr) {
+			LOGGER.info("No domain ad for domain " + domain.getName() + " and url " + ad.getUrl() + " adding it");
+			persistDomainAd(ad,domain);
+		}
+	}
+	
+	
+	protected Domain persistDomainAd(NativeAd ad, Domain domain) {
+		DomainAd domainAd = new DomainAd();
+		domainAd.setDomain(domain);
+		domainAd.setNativeAd(ad);
+
+		em.persist(domainAd);
 		
 		return domain;
 	}

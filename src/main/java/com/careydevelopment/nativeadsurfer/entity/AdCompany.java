@@ -25,8 +25,7 @@ public class AdCompany {
 	@Column(name="name")
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name="company")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy="adCompany")
 	private List<NativeAd> nativeAds;
 	
 	public AdCompany() {

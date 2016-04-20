@@ -25,8 +25,7 @@ public class Domain {
 	@Column(name="name")
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name="domain")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy="domain")
 	private List<DomainAd> domainAds;
 
 	

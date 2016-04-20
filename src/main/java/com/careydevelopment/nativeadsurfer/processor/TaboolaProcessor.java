@@ -37,6 +37,7 @@ public class TaboolaProcessor extends PublisherProcessor implements NativeAdProc
 		LOGGER.info("Checking for Taboola elements");
 		
 		List<NativeAd> nativeAds = getNativeAds();
+		LOGGER.info("Native ads size is " + nativeAds.size());
         persistNativeAds(nativeAds);
 	}
 	
@@ -47,11 +48,15 @@ public class TaboolaProcessor extends PublisherProcessor implements NativeAdProc
         try {
 	        AdCompany company = fetchAdCompany("Taboola");
 	        Domain domain = fetchDomain(domainName);
-	        /*company.setName("Taboola");
-	        em.persist(company);*/
+
+	        for (NativeAd ad : nativeAds) {
+	        	LOGGER.info("Looking at " + ad.getHeadline());
+	        	ad.setAdCompany(company);
+	        	persistAd(ad,domain);
+	        }
 	        
 	        em.getTransaction().commit();
-	        System.err.println("done");
+	        LOGGER.info("done");
         } catch (Exception e) {
         	e.printStackTrace();
         	em.getTransaction().rollback();
