@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,11 +68,17 @@ public class DomainProcessor {
 		
 		List<String> validLinks = new ArrayList<String>();
 		for (WebElement link : links) {
-			String href = link.getAttribute("href");
-			if (href.indexOf(domain) > -1 && href.length() > domain.length() + 30) {
-				LOGGER.info("Adding link " + href);
-				validLinks.add(href);
-				if (validLinks.size() == MAX_LINKS) break;
+			try {
+				String href = link.getAttribute("href");
+				if (href != null) {
+					if (href.indexOf(domain) > -1 && href.length() > domain.length() + 40) {
+						LOGGER.info("Adding link " + href);
+						validLinks.add(href);
+						if (validLinks.size() == MAX_LINKS) break;
+					}
+				}
+			} catch (StaleElementReferenceException se) {
+				LOGGER.warn("Problem retrieving native link element for " + domain);
 			}
 		}
 		

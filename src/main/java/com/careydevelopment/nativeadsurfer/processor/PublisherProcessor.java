@@ -157,7 +157,7 @@ public abstract class PublisherProcessor {
 
 	        for (NativeAd ad : nativeAds) {
 	        	//ignore ads that aren't really native ads
-	        	if (ad.getUrl().indexOf(domainName) == -1) {
+	        	if (processWorthy(ad)) {
 		        	LOGGER.info("Looking at " + ad.getHeadline());
 		        	ad.setAdCompany(company);
 		        	persistAd(ad,domain);
@@ -173,6 +173,25 @@ public abstract class PublisherProcessor {
         
         em.close();
 	}
+	
+	
+	private boolean processWorthy(NativeAd ad) {
+		boolean processWorthy = false;
+		
+		String url = ad.getUrl();
+		String imageUrl = ad.getImageUrl();
+		String headline = ad.getHeadline();
+		if (url != null && url.length() > 2 && url.indexOf(domainName) == -1) {
+			if (imageUrl != null && imageUrl.length() > 2) {
+				if (headline != null && headline.length() > 2) {
+					processWorthy = true;
+				}
+			}
+		}
+		
+		return processWorthy;
+	}
+	
 	
 	protected abstract List<NativeAd> getNativeAds();
 

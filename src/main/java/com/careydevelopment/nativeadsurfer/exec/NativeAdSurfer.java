@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.careydevelopment.nativeadsurfer.processor.DomainProcessor;
 import com.careydevelopment.nativeadsurfer.util.DomainsLoader;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.util.StatusPrinter;
+
 public class NativeAdSurfer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NativeAdSurfer.class);
@@ -23,6 +26,11 @@ public class NativeAdSurfer {
 	}
 
 	private void go() {
+		  LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		  // print logback's internal status
+		  StatusPrinter.print(lc);
+		  
+		LOGGER.info("STARTING...");
 		try {
 			WebDriver driver = new FirefoxDriver();
 			List<String> domains = DomainsLoader.getDomains();
