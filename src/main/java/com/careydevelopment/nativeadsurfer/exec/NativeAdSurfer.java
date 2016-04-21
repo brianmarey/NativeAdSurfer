@@ -26,9 +26,8 @@ public class NativeAdSurfer {
 	}
 
 	private void go() {
-		  LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		  // print logback's internal status
-		  StatusPrinter.print(lc);
+		//LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		//StatusPrinter.print(lc);
 		  
 		LOGGER.info("STARTING...");
 		try {
@@ -42,5 +41,7 @@ public class NativeAdSurfer {
 		} catch (NativeAdSurferException ne) {
 			LOGGER.error("Problem surfing for native ads!",ne);
 		}
+		
+		LOGGER.info("COMPLETE");
 	}
 }
