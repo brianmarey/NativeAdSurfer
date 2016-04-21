@@ -23,7 +23,7 @@ public class DomainsLoader {
 		
 		try(BufferedReader br = new BufferedReader(new FileReader(DOMAINS_FILE))) {
 		    for(String line; (line = br.readLine()) != null; ) {
-		        list.add(line);
+		        if (line.trim().length() > 2) list.add(line);
 		        LOGGER.info("just added " + line);
 		    }
 		} catch (IOException ie) {

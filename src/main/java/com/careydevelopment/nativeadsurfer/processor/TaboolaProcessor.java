@@ -21,52 +21,16 @@ public class TaboolaProcessor extends PublisherProcessor implements NativeAdProc
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TaboolaProcessor.class);
 	
-	private WebDriver driver;
-	private String domainName;
-	
 	public TaboolaProcessor(WebDriver driver,String domain) {
 		this.driver = driver;
 		this.domainName = domain;
+		this.publisherName = "Taboola";
 		
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("NativeAdService");
         em = emf.createEntityManager();
 	}
-
-	@Override
-	public void process() throws NativeAdSurferException {
-		LOGGER.info("Checking for Taboola elements");
-		
-		List<NativeAd> nativeAds = getNativeAds();
-		LOGGER.info("Native ads size is " + nativeAds.size());
-        persistNativeAds(nativeAds);
-	}
 	
-
-	private void persistNativeAds(List<NativeAd> nativeAds) {
-        em.getTransaction().begin();
-        
-        try {
-	        AdCompany company = fetchAdCompany("Taboola");
-	        Domain domain = fetchDomain(domainName);
-
-	        for (NativeAd ad : nativeAds) {
-	        	LOGGER.info("Looking at " + ad.getHeadline());
-	        	ad.setAdCompany(company);
-	        	persistAd(ad,domain);
-	        }
-	        
-	        em.getTransaction().commit();
-	        LOGGER.info("done");
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	em.getTransaction().rollback();
-        }
-        
-        em.close();
-	}
-	
-	
-	private List<NativeAd> getNativeAds() {
+	protected List<NativeAd> getNativeAds() {
 		List<NativeAd> nativeAds = new ArrayList<NativeAd>();
 		
 		List<WebElement> els = driver.findElements(By.className("item-thumbnail-href"));

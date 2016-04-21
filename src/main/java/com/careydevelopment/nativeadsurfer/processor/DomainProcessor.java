@@ -18,7 +18,7 @@ public class DomainProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
 	private static final int MAX_LINKS = 3;
-	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.ZERG};
+	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA};
 	
 	private String domain;
 	private WebDriver driver;
@@ -56,7 +56,7 @@ public class DomainProcessor {
 	
 	private void processAllNativeAds() throws NativeAdSurferException {
 		for (NativeAdCompany company : COMPANIES) {
-			NativeAdProcessor processor = NativeAdProcesscorFactory.getNativeAdProcessor(company,driver,domain);
+			PublisherProcessor processor = NativeAdProcesscorFactory.getNativeAdProcessor(company,driver,domain);
 			processor.process();
 		}
 	}

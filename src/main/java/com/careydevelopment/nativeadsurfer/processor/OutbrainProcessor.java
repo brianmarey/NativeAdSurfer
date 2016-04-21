@@ -1,6 +1,10 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,30 +12,48 @@ import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
+import com.careydevelopment.nativeadsurfer.entity.NativeAd;
 
-public class OutbrainProcessor implements NativeAdProcessor {
+public class OutbrainProcessor extends PublisherProcessor {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OutbrainProcessor.class);
-
-	private WebDriver driver;
-	private String domain;
 	
-	public OutbrainProcessor(WebDriver driver,String domain) {
+	public OutbrainProcessor(WebDriver driver,String domainName) {
 		this.driver = driver;
-		this.domain = domain;
-	}
-
-	@Override
-	public void process() throws NativeAdSurferException {
-		LOGGER.info("Checking for Outbrain elements");
+		this.domainName = domainName;
+		this.publisherName = "Outbrain";
 		
-		List<WebElement> els = driver.findElements(By.className("ob-widget-section"));
-	       
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("NativeAdService");
+        em = emf.createEntityManager();
+	}	
+	
+	
+	protected List<NativeAd> getNativeAds() {
+		List<NativeAd> nativeAds = new ArrayList<NativeAd>();
+		
+		List<WebElement> els = driver.findElements(By.className("ob-dynamic-rec-link"));
         for (WebElement el : els) {
-        	LOGGER.info(el.toString());
-        	LOGGER.info(el.getText());
+        	String href = el.getAttribute("href");
+        	String text = el.getText();
+        	String[] parts = text.split("\n");
+        	String headline = parts[0];
+        	LOGGER.info(headline);
+        	NativeAd nativeAd = new NativeAd();
+        	nativeAd.setUrl(href);
+        	nativeAd.setHeadline(headline);
+        	nativeAds.add(nativeAd);
         }
+        
+        int i=0;
+        els = driver.findElements(By.className("ob-rec-image"));
+        for (WebElement el : els) {
+        	String imageUrl = el.getAttribute("src");
+        	NativeAd ad = nativeAds.get(i);
+        	LOGGER.info("image url is " + imageUrl);
+        	ad.setImageUrl(imageUrl);
+        	i++;
+        }
+        
+        return nativeAds;
 	}
-
 }

@@ -1,11 +1,13 @@
 package com.careydevelopment.nativeadsurfer.processor;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,13 +15,16 @@ import com.careydevelopment.nativeadsurfer.entity.AdCompany;
 import com.careydevelopment.nativeadsurfer.entity.Domain;
 import com.careydevelopment.nativeadsurfer.entity.DomainAd;
 import com.careydevelopment.nativeadsurfer.entity.NativeAd;
+import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
 
 public abstract class PublisherProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherProcessor.class);
 	
 	protected EntityManager em;
-	
+	protected WebDriver driver;
+	protected String domainName;
+	protected String publisherName;
 	
 	protected AdCompany persistAdCompany(String companyName) {
 		AdCompany adCompany = new AdCompany();
@@ -74,27 +79,101 @@ public abstract class PublisherProcessor {
 	
 	
 	protected void persistAd(NativeAd ad, Domain domain) {
+		persistNativeAdIfNecessary(ad);
+		updateDomainAd(ad,domain);		
+	}
+	
+	
+	private void updateDomainAd(NativeAd ad, Domain domain) {
 		Query query = em.createQuery("select da from DomainAd da where da.domain.name = :domainName and da.nativeAd.url = :url");
 		query.setParameter("domainName", domain.getName());
 		query.setParameter("url", ad.getUrl());
 		
 		try {
 			DomainAd domainAd = (DomainAd)query.getSingleResult();
-			LOGGER.info("\n\n\nI GOT IT!!");
+			updateLastSeenDate(domainAd);
 		} catch (NoResultException nr) {
 			LOGGER.info("No domain ad for domain " + domain.getName() + " and url " + ad.getUrl() + " adding it");
 			persistDomainAd(ad,domain);
 		}
 	}
+
+	private void updateLastSeenDate(DomainAd domainAd) {
+		domainAd.setLastSeen(new Date());
+	}
+	
+	private void persistNativeAdIfNecessary(NativeAd ad) {
+		Query query = em.createQuery("select n from NativeAd n where n.adCompany.name = :companyName and n.url = :url and n.headline = :headline and n.imageUrl = :imageUrl");
+		query.setParameter("companyName", ad.getAdCompany().getName());
+		query.setParameter("url", ad.getUrl());
+		query.setParameter("headline", ad.getHeadline());
+		query.setParameter("imageUrl", ad.getImageUrl());
+		
+		
+		try {
+			NativeAd nativeAd = (NativeAd)query.getSingleResult();
+			LOGGER.info("\n\n\nI GOT IT!!");
+		} catch (NoResultException nr) {
+			LOGGER.info("No native ad for  " + ad.getHeadline() + " and url " + ad.getUrl() + " adding it");
+			persistNativeAd(ad);
+		}
+	}
 	
 	
-	protected Domain persistDomainAd(NativeAd ad, Domain domain) {
+	private void persistNativeAd(NativeAd ad) {
+		em.persist(ad);
+	}
+	
+	
+	private Domain persistDomainAd(NativeAd ad, Domain domain) {
 		DomainAd domainAd = new DomainAd();
 		domainAd.setDomain(domain);
 		domainAd.setNativeAd(ad);
+		domainAd.setFirstSeen(new Date());
+		domainAd.setLastSeen(new Date());
+		
+		LOGGER.info("Native Ad is " + ad);
 
 		em.persist(domainAd);
 		
 		return domain;
 	}
+	
+	public void process() throws NativeAdSurferException {
+		LOGGER.info("Checking for " + publisherName + " elements");
+		
+		List<NativeAd> nativeAds = getNativeAds();
+		LOGGER.info("Native ads size is " + nativeAds.size());
+        if (nativeAds.size() > 0) persistNativeAds(nativeAds);
+	}
+	
+
+	private void persistNativeAds(List<NativeAd> nativeAds) {
+        em.getTransaction().begin();
+        
+        try {
+	        AdCompany company = fetchAdCompany("Outbrain");
+	        Domain domain = fetchDomain(domainName);
+
+	        for (NativeAd ad : nativeAds) {
+	        	//ignore ads that aren't really native ads
+	        	if (ad.getUrl().indexOf(domainName) == -1) {
+		        	LOGGER.info("Looking at " + ad.getHeadline());
+		        	ad.setAdCompany(company);
+		        	persistAd(ad,domain);
+	        	}
+	        }
+	        
+	        em.getTransaction().commit();
+	        LOGGER.info("done");
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	em.getTransaction().rollback();
+        }
+        
+        em.close();
+	}
+	
+	protected abstract List<NativeAd> getNativeAds();
+
 }
