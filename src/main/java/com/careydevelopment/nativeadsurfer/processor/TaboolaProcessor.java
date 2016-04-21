@@ -38,7 +38,7 @@ public class TaboolaProcessor extends PublisherProcessor implements NativeAdProc
         	String href = el.getAttribute("href");
         	LOGGER.info(href);
         	NativeAd nativeAd = new NativeAd();
-        	nativeAd.setUrl(href);
+        	nativeAd.setUrl(trimUrl(href));
         	nativeAds.add(nativeAd);
         }
         

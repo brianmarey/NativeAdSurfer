@@ -36,8 +36,8 @@ public class NativeAd {
 	@JoinColumn(name="company")
 	private AdCompany adCompany;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="nativeAd")
-	private List<DomainAd> domainAds;
+	//@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="nativeAd")
+	//private List<DomainAd> domainAds;
 	
 
 	public NativeAd() {
@@ -83,7 +83,4 @@ public class NativeAd {
 	public void setAdCompany(AdCompany adCompany) {
 		this.adCompany = adCompany;
 	}
-
-
-	
 }

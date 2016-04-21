@@ -193,6 +193,20 @@ public abstract class PublisherProcessor {
 	}
 	
 	
+	//gets rid of native ad request parameters 
+	//advertisers don't get charged when user clicks on link
+	protected String trimUrl(String href) {
+		if (href != null) {
+			int questionMark = href.indexOf("?");
+			if (questionMark > -1) {
+				href = href.substring(0,questionMark);
+			}
+		}
+		
+		return href;
+	}
+	
+	
 	protected abstract List<NativeAd> getNativeAds();
 
 }

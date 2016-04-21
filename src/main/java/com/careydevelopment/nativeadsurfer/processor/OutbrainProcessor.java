@@ -39,7 +39,7 @@ public class OutbrainProcessor extends PublisherProcessor {
         	String headline = parts[0];
         	LOGGER.info(headline);
         	NativeAd nativeAd = new NativeAd();
-        	nativeAd.setUrl(href);
+        	nativeAd.setUrl(trimUrl(href));
         	nativeAd.setHeadline(headline);
         	nativeAds.add(nativeAd);
         }

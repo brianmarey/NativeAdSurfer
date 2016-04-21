@@ -87,8 +87,16 @@
         <version>2.6</version>
         <configuration>
           <archive>
-            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+          	<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+            <addMavenDescriptor>false</addMavenDescriptor>
+            <compress>true</compress>
+            <manifest>
+              <mainClass>com.group.id.Launcher1</mainClass>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>../lib/</classpathPrefix>
+            </manifest>
           </archive>
+          
         </configuration>
       </plugin>
       

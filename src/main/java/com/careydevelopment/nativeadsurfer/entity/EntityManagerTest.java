@@ -1,8 +1,11 @@
 package com.careydevelopment.nativeadsurfer.entity;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 public class EntityManagerTest {
 
@@ -17,10 +20,10 @@ public class EntityManagerTest {
         em.getTransaction().begin();
         
         try {
-        AdCompany company = new AdCompany();
-        company.setName("Taboola");
-        em.persist(company);
-        em.getTransaction().commit();
+        Query query = em.createQuery ("SELECT distinct(da.nativeAd) FROM DomainAd da order by da.lastSeen desc");
+        //Query query = em.createQuery ("SELECT na FROM NativeAd na");
+        query.setMaxResults(12);
+        List ads = query.getResultList();
         
         System.err.println("done");
         } catch (Exception e) {
