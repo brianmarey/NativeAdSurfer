@@ -1,17 +1,17 @@
 package com.careydevelopment.nativeadsurfer.exec;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.careydevelopment.nativeadsurfer.processor.DomainProcessor;
 import com.careydevelopment.nativeadsurfer.util.DomainsLoader;
-
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
 
 public class NativeAdSurfer {
 
@@ -23,6 +23,7 @@ public class NativeAdSurfer {
 	public static void main(String[] args) {
 		NativeAdSurfer surfer = new NativeAdSurfer();
 		surfer.go();
+		System.exit(0);
 	}
 
 	private void go() {
@@ -31,7 +32,13 @@ public class NativeAdSurfer {
 		  
 		LOGGER.info("STARTING...");
 		try {
-			WebDriver driver = new FirefoxDriver();
+			//WebDriver driver = new FirefoxDriver();
+			
+			 FirefoxBinary ffBinary = new FirefoxBinary();
+			 FirefoxProfile ffProfile = new FirefoxProfile();
+	         ffBinary.setTimeout(TimeUnit.SECONDS.toMillis(180));
+	         WebDriver driver = new FirefoxDriver(ffBinary, ffProfile);
+			
 			List<String> domains = DomainsLoader.getDomains();
 			
 			for (String domain : domains) {
