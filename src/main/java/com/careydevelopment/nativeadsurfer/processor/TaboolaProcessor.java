@@ -26,7 +26,7 @@ public class TaboolaProcessor extends PublisherProcessor implements NativeAdProc
 		this.domainName = domain;
 		this.publisherName = "Taboola";
 		
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("NativeAdService");
+        emf = Persistence.createEntityManagerFactory("NativeAdService");
         em = emf.createEntityManager();
 	}
 	

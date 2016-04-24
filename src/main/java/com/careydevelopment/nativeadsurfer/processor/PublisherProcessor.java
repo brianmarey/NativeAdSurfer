@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.openqa.selenium.WebDriver;
@@ -22,6 +24,7 @@ public abstract class PublisherProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PublisherProcessor.class);
 	
 	protected EntityManager em;
+	protected EntityManagerFactory emf;
 	protected WebDriver driver;
 	protected String domainName;
 	protected String publisherName;
@@ -145,6 +148,8 @@ public abstract class PublisherProcessor {
 		List<NativeAd> nativeAds = getNativeAds();
 		LOGGER.info("Native ads size is " + nativeAds.size());
         if (nativeAds.size() > 0) persistNativeAds(nativeAds);
+        if (em.isOpen()) em.close();
+        if (emf.isOpen()) emf.close();
 	}
 	
 
@@ -165,6 +170,8 @@ public abstract class PublisherProcessor {
 	        }
 	        
 	        em.getTransaction().commit();
+	        
+	        
 	        LOGGER.info("done");
         } catch (Exception e) {
         	e.printStackTrace();

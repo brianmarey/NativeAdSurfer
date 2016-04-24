@@ -23,7 +23,7 @@ public class OutbrainProcessor extends PublisherProcessor {
 		this.domainName = domainName;
 		this.publisherName = "Outbrain";
 		
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("NativeAdService");
+        emf = Persistence.createEntityManagerFactory("NativeAdService");
         em = emf.createEntityManager();
 	}	
 	
