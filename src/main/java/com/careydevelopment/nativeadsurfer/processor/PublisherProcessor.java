@@ -157,7 +157,7 @@ public abstract class PublisherProcessor {
         em.getTransaction().begin();
         
         try {
-	        AdCompany company = fetchAdCompany("Outbrain");
+	        AdCompany company = fetchAdCompany(publisherName);
 	        Domain domain = fetchDomain(domainName);
 
 	        for (NativeAd ad : nativeAds) {

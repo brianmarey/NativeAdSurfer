@@ -16,7 +16,7 @@ public class DomainProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
-	private static final int MAX_LINKS = 3;
+	private static final int MAX_LINKS = 10;
 	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA};
 	
 	private String domain;
@@ -47,8 +47,12 @@ public class DomainProcessor {
 		
 		for (String link : validLinks) {
 			LOGGER.info("Getting URL " + link);
-			driver.get(link);
-			processAllNativeAds();
+			try {
+				driver.get(link);
+				processAllNativeAds();
+			} catch (Exception e) {
+				LOGGER.error("Problem getting link " + link,e);
+			}
 		}
 	}
 	
@@ -71,7 +75,7 @@ public class DomainProcessor {
 			try {
 				String href = link.getAttribute("href");
 				if (href != null) {
-					if (href.indexOf(domain) > -1 && href.length() > domain.length() + 40) {
+					if (href.indexOf(domain) > -1 && href.indexOf("category") == -1 && href.length() > domain.length() + 50) {
 						LOGGER.info("Adding link " + href);
 						validLinks.add(href);
 						if (validLinks.size() == MAX_LINKS) break;

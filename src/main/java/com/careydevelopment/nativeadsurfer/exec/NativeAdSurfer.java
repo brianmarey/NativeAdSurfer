@@ -1,12 +1,9 @@
 package com.careydevelopment.nativeadsurfer.exec;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +31,13 @@ public class NativeAdSurfer {
 		try {
 			//WebDriver driver = new FirefoxDriver();
 			
-			 FirefoxBinary ffBinary = new FirefoxBinary();
+			/* FirefoxBinary ffBinary = new FirefoxBinary();
 			 FirefoxProfile ffProfile = new FirefoxProfile();
 	         ffBinary.setTimeout(TimeUnit.SECONDS.toMillis(180));
-	         WebDriver driver = new FirefoxDriver(ffBinary, ffProfile);
+	         WebDriver driver = new FirefoxDriver(ffBinary, ffProfile);*/
+			
+			System.setProperty("webdriver.chrome.driver", "c:/tmp/chromedriver.exe");
+			WebDriver driver = new ChromeDriver();
 			
 			List<String> domains = DomainsLoader.getDomains();
 			
