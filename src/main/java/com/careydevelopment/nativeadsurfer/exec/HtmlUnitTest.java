@@ -8,6 +8,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -21,7 +22,7 @@ public class HtmlUnitTest {
 	}
 
 	public static void main(String[] args) {
-	    final WebClient webClient = new WebClient(BrowserVersion.CHROME);
+	    final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_45);
 	    webClient.getOptions().setThrowExceptionOnScriptError(false);
 	    webClient.setAjaxController(new NicelyResynchronizingAjaxController()); 
 	    webClient.waitForBackgroundJavaScript(30000); 
@@ -33,9 +34,12 @@ public class HtmlUnitTest {
 	        // not the implementation.
 	    	WebDriver driver = new FirefoxDriver();
 
+			//System.setProperty("webdriver.chrome.driver", "c:/tmp/chromedriver.exe");
+			//WebDriver driver = new ChromeDriver();
+	    	
 	        // And now use this to visit Google
 	    	//driver.get("http://www.huffingtonpost.com/entry/trump-clinton-new-york-primary_us_57162031e4b0018f9cbb00a9");
-	        driver.get("http://www.mediaite.com/online/can-hillary-clinton-repeat-her-5-borough-sweep-here-in-new-york-city/");
+	        driver.get("http://www.thegatewaypundit.com/2016/04/gop-insider-stephen-hayes-gop-elites-will-look-3rd-party-candidate-cruz-cant-win-indiana-video/");
 	    	// Alternatively the same thing can be done like this
 	        // driver.navigate().to("http://www.google.com");
 
@@ -70,19 +74,32 @@ public class HtmlUnitTest {
 	        
 	        //List<WebElement> els = driver.findElements(By.className("heading"));
 	        
-	    	List<WebElement> els = driver.findElements(By.className("item-thumbnail-href"));
+	        
+	        
+	        
+	        
+	        
+	        
+	    	List<WebElement> els = driver.findElements(By.className("rc-headline"));
 	        //List<WebElement> els = driver.findElements(By.className("zerglayoutcl"));
 	        for (WebElement el : els) {
-	        	System.err.println(el.getAttribute("href"));
+	        	//System.err.println(el.getAttribute("href"));
 	        	System.err.println(el.getText());
 	        }
 	        
-	        els = driver.findElements(By.className("thumbnail_top"));
+	        els = driver.findElements(By.className("rc-cta"));
 	        
 	        for (WebElement el : els) {
-	        	System.err.println(el.getAttribute("data-item-thumb"));
-	        	System.err.println(el.getAttribute("data-item-title"));
+	        	System.err.println(el.getAttribute("data-target"));
 	        }
+
+	        
+	        els = driver.findElements(By.className("rc-photo"));
+	        
+	        for (WebElement el : els) {
+	        	System.err.println(el.getAttribute("style"));
+	        }
+
 	        
 	        //driver.findElements(By.)
 	        
@@ -103,7 +120,7 @@ public class HtmlUnitTest {
 	        //System.err.println(driver.getPageSource());
 	        
 	        //Close the browser
-	        driver.quit();;
+	        driver.quit();
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }

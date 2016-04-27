@@ -17,7 +17,7 @@ public class DomainProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
 	private static final int MAX_LINKS = 10;
-	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA};
+	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.REVCONTENT};
 	
 	private String domain;
 	private WebDriver driver;
