@@ -82,8 +82,16 @@ public abstract class PublisherProcessor {
 	
 	
 	protected void persistAd(NativeAd ad, Domain domain) {
-		persistNativeAdIfNecessary(ad);
-		updateDomainAd(ad,domain);		
+		em.getTransaction().begin();
+		
+		try {
+			persistNativeAdIfNecessary(ad);
+			updateDomainAd(ad,domain);	
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+		}
 	}
 	
 	
@@ -115,29 +123,36 @@ public abstract class PublisherProcessor {
 		
 		try {
 			NativeAd nativeAd = (NativeAd)query.getSingleResult();
-			LOGGER.info("\n\n\nI GOT IT!!");
+			nativeAd.setDaysSeen(nativeAd.getDaysSeen() + 1);
+			em.merge(nativeAd);
 		} catch (NoResultException nr) {
 			LOGGER.info("No native ad for  " + ad.getHeadline() + " and url " + ad.getUrl() + " adding it");
 			persistNativeAd(ad);
+			LOGGER.info("Now ad id is " + ad.getId());
 		}
 	}
 	
 	
 	private void persistNativeAd(NativeAd ad) {
+		LOGGER.info("Persisting ad " + ad.getHeadline());
+		ad.setDaysSeen(1);
 		em.persist(ad);
 	}
 	
 	
 	private Domain persistDomainAd(NativeAd ad, Domain domain) {
-		DomainAd domainAd = new DomainAd();
-		domainAd.setDomain(domain);
-		domainAd.setNativeAd(ad);
-		domainAd.setFirstSeen(new Date());
-		domainAd.setLastSeen(new Date());
-		
-		LOGGER.info("Native Ad is " + ad);
-
-		em.persist(domainAd);
+		if (ad.getId() != null) {
+			LOGGER.info("domain is " + domain.getId());
+			DomainAd domainAd = new DomainAd();
+			domainAd.setDomain(domain);
+			domainAd.setNativeAd(ad);
+			domainAd.setFirstSeen(new Date());
+			domainAd.setLastSeen(new Date());
+			
+			LOGGER.info("Native Ad is " + ad.getId());
+	
+			em.persist(domainAd);
+		}
 		
 		return domain;
 	}
@@ -154,7 +169,6 @@ public abstract class PublisherProcessor {
 	
 
 	private void persistNativeAds(List<NativeAd> nativeAds) {
-        em.getTransaction().begin();
         
         try {
 	        AdCompany company = fetchAdCompany(publisherName);
@@ -169,13 +183,10 @@ public abstract class PublisherProcessor {
 	        	}
 	        }
 	        
-	        em.getTransaction().commit();
-	        
 	        
 	        LOGGER.info("done");
         } catch (Exception e) {
         	e.printStackTrace();
-        	em.getTransaction().rollback();
         }
         
         em.close();

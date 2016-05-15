@@ -37,12 +37,12 @@ public class NativeAdSurfer {
 	         WebDriver driver = new FirefoxDriver(ffBinary, ffProfile);*/
 			
 			System.setProperty("webdriver.chrome.driver", "c:/tmp/chromedriver.exe");
-			WebDriver driver = new ChromeDriver();
+
 			
 			List<String> domains = DomainsLoader.getDomains();
 			
 			for (String domain : domains) {
-				DomainProcessor processor = new DomainProcessor(domain,driver);
+				DomainProcessor processor = new DomainProcessor(domain);
 				processor.process();
 			}
 		} catch (NativeAdSurferException ne) {

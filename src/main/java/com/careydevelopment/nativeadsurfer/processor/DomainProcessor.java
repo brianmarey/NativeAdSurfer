@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,16 +17,18 @@ public class DomainProcessor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DomainProcessor.class);
 	
-	private static final int MAX_LINKS = 10;
+	private static final int MAX_LINKS = 5;
 	private static final NativeAdCompany[] COMPANIES = {NativeAdCompany.OUTBRAIN,NativeAdCompany.TABOOLA,NativeAdCompany.REVCONTENT};
 	
 	private String domain;
 	private WebDriver driver;
 	private String rootUrl;
 	
-	public DomainProcessor(String domain, WebDriver driver) {
+	public DomainProcessor(String domain) {
 		this.domain = domain;
-		this.driver = driver;
+		
+		driver = new ChromeDriver();
+		
 		buildRootUrl();
 	}
 
@@ -40,19 +43,25 @@ public class DomainProcessor {
 	
 	
 	public void process() throws NativeAdSurferException {
-		LOGGER.info("Loading root url " + rootUrl);
-		driver.get(rootUrl);
-		
-		List<String> validLinks = getValidLinks();
-		
-		for (String link : validLinks) {
-			LOGGER.info("Getting URL " + link);
-			try {
-				driver.get(link);
-				processAllNativeAds();
-			} catch (Exception e) {
-				LOGGER.error("Problem getting link " + link,e);
+		try {
+			LOGGER.info("Loading root url " + rootUrl);
+			driver.get(rootUrl);
+			
+			List<String> validLinks = getValidLinks();
+			
+			for (String link : validLinks) {
+				LOGGER.info("Getting URL " + link);
+				try {
+					driver.get(link);
+					processAllNativeAds();
+				} catch (Exception e) {
+					LOGGER.error("Problem getting link " + link,e);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {		
+			driver.close();
 		}
 	}
 	
@@ -76,8 +85,11 @@ public class DomainProcessor {
 				String href = link.getAttribute("href");
 				if (href != null) {
 					if (href.indexOf(domain) > -1 && href.indexOf("category") == -1 && href.length() > domain.length() + 50) {
-						LOGGER.info("Adding link " + href);
-						validLinks.add(href);
+						if (!validLinks.contains(href)) {
+							if (href.indexOf("jpg") == -1 && href.indexOf(".gif") == -1 && href.indexOf(".png") == -1) {
+								validLinks.add(href);								
+							}
+						}
 						if (validLinks.size() == MAX_LINKS) break;
 					}
 				}

@@ -1,17 +1,12 @@
 package com.careydevelopment.nativeadsurfer.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +17,9 @@ public class NativeAd {
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
+	
+	@Column(name="days_seen")
+	private int daysSeen;
 
 	@Column(name="url")
 	private String url;
@@ -83,4 +81,13 @@ public class NativeAd {
 	public void setAdCompany(AdCompany adCompany) {
 		this.adCompany = adCompany;
 	}
+
+	public int getDaysSeen() {
+		return daysSeen;
+	}
+
+	public void setDaysSeen(int daysSeen) {
+		this.daysSeen = daysSeen;
+	}
+	
 }
