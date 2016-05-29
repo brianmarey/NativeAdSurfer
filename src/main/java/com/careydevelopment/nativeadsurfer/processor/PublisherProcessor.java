@@ -126,7 +126,7 @@ public abstract class PublisherProcessor {
 			NativeAd nativeAd = (NativeAd)query.getSingleResult();
 			
 			if (!UsedNativeAds.getInstance().isInList(nativeAd)) {
-				LOGGER.info("Haven't seen this ad yet: " + nativeAd.getHeadline() + " " + nativeAd.getUrl() + " " + nativeAd.getImageUrl());
+				LOGGER.info("Haven't seen this ad yet: " + nativeAd.getHeadline() + " " + nativeAd.getId() + " " + nativeAd.getUrl() + " " + nativeAd.getImageUrl());
 				nativeAd.setDaysSeen(nativeAd.getDaysSeen() + 1);
 				UsedNativeAds.getInstance().addAd(nativeAd);
 				em.merge(nativeAd);
