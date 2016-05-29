@@ -18,6 +18,7 @@ import com.careydevelopment.nativeadsurfer.entity.Domain;
 import com.careydevelopment.nativeadsurfer.entity.DomainAd;
 import com.careydevelopment.nativeadsurfer.entity.NativeAd;
 import com.careydevelopment.nativeadsurfer.exec.NativeAdSurferException;
+import com.careydevelopment.nativeadsurfer.util.UsedNativeAds;
 
 public abstract class PublisherProcessor {
 
@@ -123,8 +124,13 @@ public abstract class PublisherProcessor {
 		
 		try {
 			NativeAd nativeAd = (NativeAd)query.getSingleResult();
-			nativeAd.setDaysSeen(nativeAd.getDaysSeen() + 1);
-			em.merge(nativeAd);
+			
+			if (!UsedNativeAds.getInstance().isInList(nativeAd)) {
+				LOGGER.info("Haven't seen this ad yet: " + nativeAd.getHeadline() + " " + nativeAd.getUrl() + " " + nativeAd.getImageUrl());
+				nativeAd.setDaysSeen(nativeAd.getDaysSeen() + 1);
+				UsedNativeAds.getInstance().addAd(nativeAd);
+				em.merge(nativeAd);
+			}
 		} catch (NoResultException nr) {
 			LOGGER.info("No native ad for  " + ad.getHeadline() + " and url " + ad.getUrl() + " adding it");
 			persistNativeAd(ad);
@@ -137,6 +143,7 @@ public abstract class PublisherProcessor {
 		LOGGER.info("Persisting ad " + ad.getHeadline());
 		ad.setDaysSeen(1);
 		em.persist(ad);
+		UsedNativeAds.getInstance().addAd(ad);
 	}
 	
 	
